@@ -97,4 +97,11 @@ public CommonResult<CommonPage<UmsRole>> list(@RequestParam(value = "keyword",re
            return CommonResult.failed();
        }
     }
+    @ApiOperation("获取所有角色")
+    @RequestMapping(value = "/listAll", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<UmsRole>> listAll() {
+        List<UmsRole> roleList = umsRoleService.list();
+        return CommonResult.success(roleList);
+    }
 }

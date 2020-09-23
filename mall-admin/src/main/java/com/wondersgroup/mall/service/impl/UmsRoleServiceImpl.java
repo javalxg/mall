@@ -57,7 +57,7 @@ public class UmsRoleServiceImpl implements UmsRoleService {
 
     @Override
     public List<UmsRole> list() {
-        return null;
+     return umsRoleMapper.selectByExample(new UmsRoleExample());
     }
 
     @Override

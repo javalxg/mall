@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -130,8 +131,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             if(!userDetails.isEnabled()){
                 Asserts.fail("账号被禁用");
             }
-            UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails,null, userDetails.getAuthorities());
+            SecurityContext context= SecurityContextHolder.getContext();
+            context.setAuthentication(authenticationToken);
             token=jwtTokenUtil.generateToken(userDetails);
             insertLoginLog(username);
         }catch (AuthenticationException e){

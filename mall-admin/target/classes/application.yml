@@ -49,4 +49,4 @@ secure:
       - /minio/upload
 
 server:
-  port: 9000
+  port: 8000

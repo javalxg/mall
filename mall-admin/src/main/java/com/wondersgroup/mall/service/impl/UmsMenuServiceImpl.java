@@ -1,5 +1,6 @@
 package com.wondersgroup.mall.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.wondersgroup.mall.dto.UmsMenuNode;
 import com.wondersgroup.mall.mapper.UmsMenuMapper;
 import com.wondersgroup.mall.model.UmsMenu;
@@ -9,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,65 @@ public class UmsMenuServiceImpl implements MenuService {
                 .map(subMenu->convertMenuNode(subMenu,menuList)).collect(Collectors.toList());
         node.setChildren(children);
         return node;
+
+    }
+
+    @Override
+    public List<UmsMenu> list(Long parentId, Integer pageSize, Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
+        UmsMenuExample example=new UmsMenuExample();
+        example.createCriteria().andParentIdEqualTo(parentId);
+        example.setOrderByClause("sort desc");
+        return umsMenuMapper.selectByExample(example);
+
+    }
+
+    @Override
+    public int updateHidden(Long id, Integer hidden) {
+        UmsMenu umsMenu=new UmsMenu();
+        umsMenu.setId(id);
+        umsMenu.setHidden(hidden);
+        return umsMenuMapper.updateByPrimaryKeySelective(umsMenu);
+    }
+
+    @Override
+    public UmsMenu getIten(Long id) {
+        return umsMenuMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int update(Long id,UmsMenu umsMenu) {
+        umsMenu.setId(id);
+        updateMenuLevel(umsMenu);
+        return umsMenuMapper.updateByPrimaryKeySelective(umsMenu);
+    }
+
+    @Override
+    public int create(UmsMenu umsMenu) {
+        umsMenu.setCreateTime(new Date());
+        updateMenuLevel(umsMenu);
+        return umsMenuMapper.insert(umsMenu);
+    }
+
+    @Override
+    public int delete(Long id) {
+        return umsMenuMapper.deleteByPrimaryKey(id);
+    }
+
+    private void updateMenuLevel(UmsMenu umsMenu){
+        if (umsMenu.getParentId()==0){
+            //没有父菜单 设为一级菜单
+        umsMenu.setLevel(0);
+        }else{
+            //有父级菜单时，根据父级菜单设置
+            UmsMenu umsMenu1=umsMenuMapper.selectByPrimaryKey(umsMenu.getParentId());
+            if (umsMenu1 != null) {
+                umsMenu.setLevel(umsMenu1.getLevel() + 1);
+            } else {
+                umsMenu.setLevel(0);
+            }
+        }
+
 
     }
 }
