@@ -21,7 +21,7 @@ public class SwaggerConfig extends BaseSwaggerConfig {
                 .description("mall后台相关接口文档")
                 .contactName("wondersgroup")
                 .version("1.0")
-                .enableSecurity(false)
+                .enableSecurity(true)
                 .build();
     }
 }

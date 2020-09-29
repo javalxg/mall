@@ -47,6 +47,19 @@ secure:
       - /admin/info
       - /admin/logout
       - /minio/upload
+      - /aliyun/oss/callback
 
 server:
   port: 8000
+aliyun:
+  oss: #LTAI4G4VK1PyFU9ZaXNB11so/UVFwnxaCYmi69ZWgyREb3z4iBtNLa5
+    endpoint: oss-cn-shanghai.aliyuncs.com # oss对外服务的访问域名
+    accessKeyId: LTAI4G4VK1PyFU9ZaXNB11so # 访问身份验证中用到用户标识
+    accessKeySecret: UVFwnxaCYmi69ZWgyREb3z4iBtNLa5 # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    bucketName: lxg-mall-file # oss的存储空间
+    policy:
+      expire: 300 # 签名有效期(S)
+    maxSize: 10 # 上传文件大小(M)
+    callback: http://qcqcgzkv3v.52http.net/aliyun/oss/callback # 文件上传成功后的回调地址
+    dir:
+      prefix: mall/images/ # 上传文件夹路径前缀

@@ -40,7 +40,7 @@ public class RedisCacheAspect {
             if (method.isAnnotationPresent(CacheException.class)){
                     throw  throwable;
             }else {
-                LOGGER.error(throwable.getMessage());
+                LOGGER.error("缓存失效"+throwable.getMessage());
             }
         }
         return result;
